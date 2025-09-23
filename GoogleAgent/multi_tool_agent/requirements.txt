@@ -1,0 +1,6 @@
+# Dependencies for agent.py
+# Standard library modules (datetime, zoneinfo) are not listed.
+# If running on Python < 3.9, include the zoneinfo backport below.
+
+google-adk
+backports.zoneinfo; python_version < "3.9"
