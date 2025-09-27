@@ -22,10 +22,6 @@
   aside {
     @apply w-full;
   }
-  
-  .hidden {
-    @apply hidden;
-  }
 }
 
 /* Animation for message appearance */
