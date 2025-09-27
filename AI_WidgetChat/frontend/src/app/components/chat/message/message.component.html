@@ -1,0 +1,30 @@
+<div class="message" [class.user-message]="isUser" [class.assistant-message]="isAssistant">
+  <!-- User Message -->
+  <div *ngIf="isUser" class="message-content user-content">
+    <div class="message-bubble user-bubble">
+      <div class="message-text">{{ message.content }}</div>
+      <div class="message-time">{{ formattedTime }}</div>
+    </div>
+    <div class="message-avatar user-avatar">
+      <mat-icon>person</mat-icon>
+    </div>
+  </div>
+
+  <!-- Assistant Message -->
+  <div *ngIf="isAssistant" class="message-content assistant-content">
+    <div class="message-avatar assistant-avatar">
+      <mat-icon>smart_toy</mat-icon>
+    </div>
+    <div class="message-bubble assistant-bubble">
+      <div class="message-text" *ngIf="message.content">{{ message.content }}</div>
+
+      <!-- Widgets -->
+      <div *ngIf="hasWidgets" class="widgets-container">
+        <app-widget *ngFor="let widget of message.widgets" [widget]="widget" class="widget-item">
+        </app-widget>
+      </div>
+
+      <div class="message-time">{{ formattedTime }}</div>
+    </div>
+  </div>
+</div>

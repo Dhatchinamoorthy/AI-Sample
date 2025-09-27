@@ -1,0 +1,169 @@
+<mat-card class="widget-card" [class]="widgetClass + ' ' + sizeClass">
+  <mat-card-header>
+    <div class="widget-header">
+      <div class="widget-title">
+        <mat-icon class="widget-icon">{{ getWidgetIcon() }}</mat-icon>
+        <span>{{ widget.title }}</span>
+      </div>
+      <div class="widget-actions">
+        <button
+          *ngFor="let action of widget.actions"
+          mat-icon-button
+          (click)="onAction(action)"
+          [matTooltip]="action.description || action.label"
+          class="action-button"
+        >
+          <mat-icon>{{ action.icon || 'more_vert' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="widget-content">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Loading...</span>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <!-- Widget Content -->
+    <div *ngIf="!isLoading && !error" class="widget-body">
+      <!-- Weather Widget -->
+      <div *ngIf="widget.type === 'weather'" class="weather-widget">
+        <ng-container *ngIf="getWeatherData() as weather">
+          <div class="weather-main">
+            <div class="weather-icon">
+              <img
+                *ngIf="weather.current.icon"
+                [src]="getWeatherIconUrl(weather.current.icon)"
+                [alt]="weather.current.description"
+              />
+            </div>
+            <div class="weather-info">
+              <div class="temperature">
+                {{ formatTemperature(weather.current.temperature) }}
+              </div>
+              <div class="description">{{ weather.current.description | titlecase }}</div>
+              <div class="location">
+                {{ weather.location.name }}, {{ weather.location.country }}
+              </div>
+            </div>
+          </div>
+
+          <div class="weather-details" *ngIf="widget.config.size !== 'small'">
+            <div class="detail-item">
+              <mat-icon>opacity</mat-icon>
+              <span>{{ weather.details.humidity }}%</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>speed</mat-icon>
+              <span>{{ weather.details.wind_speed }} m/s</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>visibility</mat-icon>
+              <span>{{ weather.details.visibility }} km</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Stock Widget -->
+      <div *ngIf="widget.type === 'stock'" class="stock-widget">
+        <ng-container *ngIf="getStockData() as stock">
+          <div class="stock-header">
+            <div class="stock-symbol">{{ stock.symbol }}</div>
+            <div class="stock-name">{{ stock.company_name }}</div>
+          </div>
+
+          <div class="stock-price">
+            <span class="price">{{ formatCurrency(stock.price.current) }}</span>
+            <span
+              class="change"
+              [class.positive]="stock.change.is_positive"
+              [class.negative]="!stock.change.is_positive"
+            >
+              {{ stock.change.formatted }}
+            </span>
+          </div>
+
+          <div class="stock-details" *ngIf="widget.config.size !== 'small'">
+            <div class="detail-row">
+              <span>Open:</span>
+              <span>{{ formatCurrency(stock.price.open) }}</span>
+            </div>
+            <div class="detail-row">
+              <span>High:</span>
+              <span>{{ formatCurrency(stock.range.high) }}</span>
+            </div>
+            <div class="detail-row">
+              <span>Low:</span>
+              <span>{{ formatCurrency(stock.range.low) }}</span>
+            </div>
+            <div class="detail-row">
+              <span>Volume:</span>
+              <span>{{ formatNumber(stock.volume) }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- News Widget -->
+      <div *ngIf="widget.type === 'news'" class="news-widget">
+        <ng-container *ngIf="getNewsData() as news">
+          <div class="news-header">
+            <span class="news-query">{{ news.query | titlecase }}</span>
+            <mat-chip class="news-count">{{ news.total_results }} articles</mat-chip>
+          </div>
+
+          <div class="news-articles">
+            <div
+              *ngFor="let article of news.articles.slice(0, getMaxArticles())"
+              class="news-article"
+            >
+              <div class="article-header">
+                <h4 class="article-title">{{ article.title }}</h4>
+                <span class="article-source">{{ article.source }}</span>
+              </div>
+              <p class="article-description">{{ article.description }}</p>
+              <div class="article-meta">
+                <span class="article-time">{{ formatRelativeTime(article.published_at) }}</span>
+                <a [href]="article.url" target="_blank" class="article-link">
+                  <mat-icon>open_in_new</mat-icon>
+                  Read more
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Clock Widget -->
+      <div *ngIf="widget.type === 'clock'" class="clock-widget">
+        <ng-container *ngIf="getClockData() as clock">
+          <div class="clock-time">
+            <div class="time-display">{{ clock.time.formatted_12h }}</div>
+            <div class="timezone">{{ clock.location }}</div>
+          </div>
+
+          <div class="clock-date" *ngIf="widget.config.size !== 'small'">
+            <div class="date-display">{{ clock.date.full }}</div>
+            <div class="day-of-week">{{ clock.date.day_of_week }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-footer *ngIf="widget.metadata" class="widget-footer">
+    <div class="widget-meta">
+      <span class="last-updated">{{ formatRelativeTime(widget.metadata.updated_at) }}</span>
+      <mat-chip *ngIf="isMockData()" class="mock-chip">Mock Data</mat-chip>
+    </div>
+  </mat-card-footer>
+</mat-card>

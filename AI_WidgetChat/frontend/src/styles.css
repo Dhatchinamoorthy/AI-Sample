@@ -1,0 +1,113 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: #fafafa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Snackbar customizations */
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Material Design overrides */
+.mat-mdc-card {
+  border-radius: 12px !important;
+}
+
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button {
+  border-radius: 8px !important;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Custom widget styles */
+.widget-card {
+  transition: all 0.2s ease;
+}
+
+.widget-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading spinner customizations */
+.mat-mdc-progress-spinner circle {
+  stroke: #1976d2;
+}
+
+/* Chip customizations */
+.mat-mdc-chip {
+  border-radius: 16px !important;
+}
+
+/* Icon customizations */
+.mat-icon {
+  vertical-align: middle;
+}
