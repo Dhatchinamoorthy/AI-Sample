@@ -1,38 +1,143 @@
-<div class="app-container">
+<div class="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600">
   <!-- Header -->
-  <mat-toolbar color="primary" class="app-header">
-    <button mat-icon-button (click)="toggleSidebar()" class="menu-button">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span class="app-title">{{ title }}</span>
-    <span class="spacer"></span>
-    <button mat-icon-button>
-      <mat-icon>settings</mat-icon>
-    </button>
-  </mat-toolbar>
+  <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-white/20">
+    <div class="flex items-center justify-between px-6 py-4">
+      <div class="flex items-center space-x-4">
+        <button
+          (click)="toggleSidebar()"
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-white"
+          title="Toggle Menu"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+          <span class="text-sm font-medium hidden sm:inline">Menu</span>
+        </button>
+        <h1 class="text-xl font-bold gradient-text">{{ title }}</h1>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-2 text-white/80 text-sm">
+          <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span>AI Assistant Online</span>
+        </div>
+        <button
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-white"
+          title="Settings"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+          <span class="text-sm font-medium hidden sm:inline">Settings</span>
+        </button>
+      </div>
+    </div>
+  </header>
 
   <!-- Sidebar -->
-  <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav [(opened)]="sidebarOpen" mode="side" class="app-sidenav">
-      <mat-nav-list>
-        <a mat-list-item routerLink="/chat" routerLinkActive="active">
-          <mat-icon matListItemIcon>chat</mat-icon>
-          <span matListItemTitle>Chat</span>
+  <aside
+    class="fixed top-20 left-0 z-40 w-64 h-[calc(100vh-5rem)] glass-effect border-r border-white/20 transform transition-transform duration-300 ease-in-out"
+    [class.translate-x-0]="sidebarOpen"
+    [class.-translate-x-full]="!sidebarOpen"
+  >
+    <nav class="p-6">
+      <div class="space-y-2">
+        <a
+          routerLink="/chat"
+          routerLinkActive="active"
+          class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white hover:bg-white/20 transition-all duration-200 group"
+        >
+          <div
+            class="p-2 rounded-lg bg-primary-500/20 group-hover:bg-primary-500/30 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              ></path>
+            </svg>
+          </div>
+          <span class="font-medium">Chat</span>
         </a>
-        <a mat-list-item routerLink="/widgets" routerLinkActive="active">
-          <mat-icon matListItemIcon>widgets</mat-icon>
-          <span matListItemTitle>Widgets</span>
-        </a>
-        <a mat-list-item routerLink="/settings" routerLinkActive="active">
-          <mat-icon matListItemIcon>settings</mat-icon>
-          <span matListItemTitle>Settings</span>
-        </a>
-      </mat-nav-list>
-    </mat-sidenav>
 
-    <!-- Main Content -->
-    <mat-sidenav-content class="main-content">
+        <a
+          routerLink="/widgets"
+          routerLinkActive="active"
+          class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white hover:bg-white/20 transition-all duration-200 group"
+        >
+          <div
+            class="p-2 rounded-lg bg-accent-500/20 group-hover:bg-accent-500/30 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              ></path>
+            </svg>
+          </div>
+          <span class="font-medium">Widgets</span>
+        </a>
+
+        <a
+          routerLink="/settings"
+          routerLinkActive="active"
+          class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white hover:bg-white/20 transition-all duration-200 group"
+        >
+          <div
+            class="p-2 rounded-lg bg-secondary-500/20 group-hover:bg-secondary-500/30 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+            </svg>
+          </div>
+          <span class="font-medium">Settings</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="pt-20 pl-0 transition-all duration-300" [class.pl-64]="sidebarOpen">
+    <div class="min-h-[calc(100vh-5rem)] p-6">
       <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    </div>
+  </main>
+
+  <!-- Mobile Overlay -->
+  <div
+    *ngIf="sidebarOpen"
+    (click)="toggleSidebar()"
+    class="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
+  ></div>
 </div>
