@@ -49,7 +49,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   sessions: ChatSession[] = [];
   messages: Message[] = [];
   currentSession: ChatSession | null = null;
-  sidebarOpen = false;
+  sidebarOpen = true;
 
   constructor(
     private chatService: ChatService,

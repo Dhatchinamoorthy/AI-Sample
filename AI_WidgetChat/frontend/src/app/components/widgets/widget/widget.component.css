@@ -1,351 +1,238 @@
 .widget-card {
-  margin: 8px 0;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: box-shadow 0.2s ease;
+  @apply rounded-xl transition-all duration-300;
+  color: white !important;
 }
 
-.widget-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+.widget-card * {
+  color: inherit;
+}
+
+/* Ensure specific text elements are visible */
+.widget-card .text-primary-400 {
+  color: #60a5fa !important;
+}
+
+.widget-card .text-white\/70,
+.widget-card .text-white\/60,
+.widget-card .text-white\/80 {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.widget-card .text-green-400 {
+  color: #4ade80 !important;
+}
+
+.widget-card .text-red-400 {
+  color: #f87171 !important;
+}
+
+.widget-card .text-orange-400 {
+  color: #fb923c !important;
+}
+
+/* Stock widget specific overrides for dark text on light background */
+.stock-widget-content {
+  color: #1f2937 !important;
+}
+
+.stock-widget-content * {
+  color: inherit;
+}
+
+.stock-widget-content .text-primary-600 {
+  color: #2563eb !important;
+}
+
+.stock-widget-content .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.stock-widget-content .text-gray-900 {
+  color: #111827 !important;
+}
+
+.stock-widget-content .text-green-600 {
+  color: #059669 !important;
+}
+
+.stock-widget-content .text-red-600 {
+  color: #dc2626 !important;
+}
+
+.stock-widget-content .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+/* Weather widget specific overrides for dark text on light background */
+.weather-widget-content {
+  color: #1f2937 !important;
+}
+
+.weather-widget-content * {
+  color: inherit;
+}
+
+.weather-widget-content .text-gray-900 {
+  color: #111827 !important;
+}
+
+.weather-widget-content .text-gray-700 {
+  color: #374151 !important;
+}
+
+.weather-widget-content .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.weather-widget-content .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.weather-widget-content .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+/* News widget specific overrides for dark text on light background */
+.news-widget-content {
+  color: #1f2937 !important;
+}
+
+.news-widget-content * {
+  color: inherit;
+}
+
+.news-widget-content .text-primary-600 {
+  color: #2563eb !important;
+}
+
+.news-widget-content .text-gray-900 {
+  color: #111827 !important;
+}
+
+.news-widget-content .text-gray-700 {
+  color: #374151 !important;
+}
+
+.news-widget-content .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.news-widget-content .bg-gray-100 {
+  background-color: #f3f4f6 !important;
+}
+
+.news-widget-content .bg-gray-50 {
+  background-color: #f9fafb !important;
+}
+
+.news-widget-content .bg-gray-200 {
+  background-color: #e5e7eb !important;
+}
+
+.news-widget-content .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+/* Clock widget specific overrides for dark text on light background */
+.clock-widget-content {
+  color: #1f2937 !important;
+}
+
+.clock-widget-content * {
+  color: inherit;
+}
+
+.clock-widget-content .text-gray-900 {
+  color: #111827 !important;
+}
+
+.clock-widget-content .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.clock-widget-content .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+/* Widget header and footer overrides */
+.widget-header {
+  color: #1f2937 !important;
+}
+
+.widget-header * {
+  color: inherit;
+}
+
+.widget-header .text-gray-900 {
+  color: #111827 !important;
+}
+
+.widget-header .text-primary-600 {
+  color: #2563eb !important;
+}
+
+.widget-header .bg-gray-100 {
+  background-color: #f3f4f6 !important;
+}
+
+.widget-header .bg-gray-200 {
+  background-color: #e5e7eb !important;
+}
+
+.widget-header .text-gray-700 {
+  color: #374151 !important;
+}
+
+.widget-header .border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+.widget-footer {
+  color: #1f2937 !important;
+}
+
+.widget-footer * {
+  color: inherit;
+}
+
+.widget-footer .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.widget-footer .bg-gray-50 {
+  background-color: #f9fafb !important;
+}
+
+.widget-footer .bg-orange-100 {
+  background-color: #fed7aa !important;
+}
+
+.widget-footer .text-orange-600 {
+  color: #ea580c !important;
+}
+
+.widget-footer .border-gray-200 {
+  border-color: #e5e7eb !important;
 }
 
 /* Widget Sizes */
 .widget-small {
-  max-width: 300px;
+  @apply max-w-xs;
 }
 
 .widget-medium {
-  max-width: 400px;
+  @apply max-w-sm;
 }
 
 .widget-large {
-  max-width: 600px;
+  @apply max-w-md;
 }
 
-/* Widget Header */
-.widget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.widget-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-}
-
-.widget-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.widget-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.action-button {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-}
-
-/* Widget Content */
+/* Widget Content - minimal styles since we're using Tailwind */
 .widget-content {
-  padding: 16px;
+  /* Content is now styled with Tailwind classes */
 }
 
-.loading-state, .error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 20px;
-  color: #666;
-}
+/* All widget content is now styled with Tailwind classes in the template */
 
-.error-state {
-  color: #f44336;
-}
-
-/* Weather Widget */
-.weather-widget .weather-main {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.weather-icon img {
-  width: 64px;
-  height: 64px;
-}
-
-.weather-info {
-  flex: 1;
-}
-
-.temperature {
-  font-size: 2rem;
-  font-weight: 300;
-  margin-bottom: 4px;
-}
-
-.description {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 4px;
-}
-
-.location {
-  font-size: 0.9rem;
-  color: #888;
-}
-
-.weather-details {
-  display: flex;
-  justify-content: space-around;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.detail-item mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-}
-
-/* Stock Widget */
-.stock-widget .stock-header {
-  margin-bottom: 12px;
-}
-
-.stock-symbol {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1976d2;
-}
-
-.stock-name {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.stock-price {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.price {
-  font-size: 1.8rem;
-  font-weight: 600;
-}
-
-.change {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.change.positive {
-  color: #4caf50;
-}
-
-.change.negative {
-  color: #f44336;
-}
-
-.stock-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  font-size: 0.9rem;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-/* News Widget */
-.news-widget .news-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.news-query {
-  font-weight: 600;
-  color: #1976d2;
-}
-
-.news-count {
-  font-size: 0.8rem;
-}
-
-.news-articles {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.news-article {
-  padding: 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-.article-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  gap: 12px;
-}
-
-.article-title {
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0;
-  line-height: 1.3;
-  flex: 1;
-}
-
-.article-source {
-  font-size: 0.8rem;
-  color: #666;
-  background-color: #e0e0e0;
-  padding: 2px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.article-description {
-  font-size: 0.9rem;
-  color: #555;
-  margin: 0 0 8px 0;
-  line-height: 1.4;
-}
-
-.article-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.article-link {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #1976d2;
-  text-decoration: none;
-}
-
-.article-link:hover {
-  text-decoration: underline;
-}
-
-/* Clock Widget */
-.clock-widget .clock-time {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.time-display {
-  font-size: 2.5rem;
-  font-weight: 300;
-  font-family: 'Roboto Mono', monospace;
-  margin-bottom: 8px;
-}
-
-.timezone {
-  font-size: 1rem;
-  color: #666;
-  font-weight: 500;
-}
-
-.clock-date {
-  text-align: center;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.date-display {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.day-of-week {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-/* Widget Footer */
-.widget-footer {
-  padding: 8px 16px;
-  background-color: #f5f5f5;
-  border-radius: 0 0 12px 12px;
-}
-
-.widget-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.mock-chip {
-  font-size: 0.7rem;
-  height: 20px;
-  background-color: #ff9800;
-  color: white;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .widget-card {
-    margin: 4px 0;
-  }
-  
-  .widget-small, .widget-medium, .widget-large {
-    max-width: 100%;
-  }
-  
-  .weather-widget .weather-main {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .stock-price {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  
-  .article-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
+/* Responsive Design - handled by Tailwind responsive classes */

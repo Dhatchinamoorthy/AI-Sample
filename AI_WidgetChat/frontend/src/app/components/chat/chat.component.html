@@ -1,8 +1,12 @@
 <div class="flex h-full">
   <!-- Chat Sidebar -->
   <aside
-    class="w-80 glass-effect border-r border-white/20 flex flex-col"
+    class="w-80 glass-effect border-r border-white/20 flex flex-col transition-all duration-300 ease-in-out"
     [class.hidden]="!sidebarOpen"
+    [class.absolute]="sidebarOpen"
+    [class.z-50]="sidebarOpen"
+    [class.md:relative]="true"
+    [class.md:z-auto]="true"
   >
     <!-- Sidebar Header -->
     <div class="p-6 border-b border-white/20">
@@ -75,7 +79,8 @@
         <div class="flex items-center space-x-4">
           <button
             (click)="toggleSidebar()"
-            class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 md:hidden"
+            class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200"
+            title="Toggle Chat History"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -195,4 +200,11 @@
       </div>
     </div>
   </main>
+
+  <!-- Mobile Overlay -->
+  <div
+    *ngIf="sidebarOpen"
+    (click)="toggleSidebar()"
+    class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+  ></div>
 </div>

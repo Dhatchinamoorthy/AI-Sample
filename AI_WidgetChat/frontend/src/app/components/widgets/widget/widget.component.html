@@ -1,72 +1,75 @@
-<mat-card class="widget-card" [class]="widgetClass + ' ' + sizeClass">
-  <mat-card-header>
-    <div class="widget-header">
-      <div class="widget-title">
-        <mat-icon class="widget-icon">{{ getWidgetIcon() }}</mat-icon>
+<div class="widget-card glass-effect" [class]="widgetClass + ' ' + sizeClass">
+  <div class="widget-header p-4 border-b border-gray-200">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-2 text-gray-900 font-medium">
+        <mat-icon class="text-primary-600">{{ getWidgetIcon() }}</mat-icon>
         <span>{{ widget.title }}</span>
       </div>
-      <div class="widget-actions">
+      <div class="flex gap-1">
         <button
           *ngFor="let action of widget.actions"
-          mat-icon-button
           (click)="onAction(action)"
           [matTooltip]="action.description || action.label"
-          class="action-button"
+          class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-200"
         >
-          <mat-icon>{{ action.icon || 'more_vert' }}</mat-icon>
+          <mat-icon class="text-sm">{{ action.icon || 'more_vert' }}</mat-icon>
         </button>
       </div>
     </div>
-  </mat-card-header>
+  </div>
 
-  <mat-card-content class="widget-content">
+  <div class="widget-content p-4">
     <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-state">
-      <mat-spinner diameter="40"></mat-spinner>
+    <div *ngIf="isLoading" class="flex flex-col items-center gap-3 py-8 text-gray-600">
+      <mat-spinner diameter="40" color="primary"></mat-spinner>
       <span>Loading...</span>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error" class="error-state">
-      <mat-icon color="warn">error</mat-icon>
+    <div *ngIf="error" class="flex flex-col items-center gap-3 py-8 text-red-600">
+      <mat-icon>error</mat-icon>
       <span>{{ error }}</span>
     </div>
 
     <!-- Widget Content -->
     <div *ngIf="!isLoading && !error" class="widget-body">
       <!-- Weather Widget -->
-      <div *ngIf="widget.type === 'weather'" class="weather-widget">
+      <div *ngIf="widget.type === 'weather'" class="weather-widget-content">
         <ng-container *ngIf="getWeatherData() as weather">
-          <div class="weather-main">
+          <div class="flex items-center gap-4 mb-4">
             <div class="weather-icon">
               <img
                 *ngIf="weather.current.icon"
                 [src]="getWeatherIconUrl(weather.current.icon)"
                 [alt]="weather.current.description"
+                class="w-16 h-16"
               />
             </div>
-            <div class="weather-info">
-              <div class="temperature">
+            <div class="flex-1">
+              <div class="text-3xl font-light mb-1 text-gray-900">
                 {{ formatTemperature(weather.current.temperature) }}
               </div>
-              <div class="description">{{ weather.current.description | titlecase }}</div>
-              <div class="location">
+              <div class="text-gray-700 mb-1">{{ weather.current.description | titlecase }}</div>
+              <div class="text-gray-600 text-sm">
                 {{ weather.location.name }}, {{ weather.location.country }}
               </div>
             </div>
           </div>
 
-          <div class="weather-details" *ngIf="widget.config.size !== 'small'">
-            <div class="detail-item">
-              <mat-icon>opacity</mat-icon>
+          <div
+            *ngIf="widget.config.size !== 'small'"
+            class="flex justify-around pt-4 border-t border-gray-200"
+          >
+            <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
+              <mat-icon class="text-lg text-gray-500">opacity</mat-icon>
               <span>{{ weather.details.humidity }}%</span>
             </div>
-            <div class="detail-item">
-              <mat-icon>speed</mat-icon>
+            <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
+              <mat-icon class="text-lg text-gray-500">speed</mat-icon>
               <span>{{ weather.details.wind_speed }} m/s</span>
             </div>
-            <div class="detail-item">
-              <mat-icon>visibility</mat-icon>
+            <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
+              <mat-icon class="text-lg text-gray-500">visibility</mat-icon>
               <span>{{ weather.details.visibility }} km</span>
             </div>
           </div>
@@ -74,67 +77,80 @@
       </div>
 
       <!-- Stock Widget -->
-      <div *ngIf="widget.type === 'stock'" class="stock-widget">
+      <div *ngIf="widget.type === 'stock'" class="stock-widget-content">
         <ng-container *ngIf="getStockData() as stock">
-          <div class="stock-header">
-            <div class="stock-symbol">{{ stock.symbol }}</div>
-            <div class="stock-name">{{ stock.company_name }}</div>
+          <div class="mb-3">
+            <div class="text-2xl font-semibold text-primary-600">{{ stock.symbol }}</div>
+            <div class="text-gray-600 text-sm">{{ stock.company_name }}</div>
           </div>
 
-          <div class="stock-price">
-            <span class="price">{{ formatCurrency(stock.price.current) }}</span>
+          <div class="flex items-baseline gap-3 mb-4">
+            <span class="text-3xl font-semibold text-gray-900">{{
+              formatCurrency(stock.price.current)
+            }}</span>
             <span
-              class="change"
-              [class.positive]="stock.change.is_positive"
-              [class.negative]="!stock.change.is_positive"
+              class="text-lg font-medium"
+              [class.text-green-600]="stock.change.is_positive"
+              [class.text-red-600]="!stock.change.is_positive"
             >
               {{ stock.change.formatted }}
             </span>
           </div>
 
-          <div class="stock-details" *ngIf="widget.config.size !== 'small'">
-            <div class="detail-row">
-              <span>Open:</span>
-              <span>{{ formatCurrency(stock.price.open) }}</span>
+          <div *ngIf="widget.config.size !== 'small'" class="grid grid-cols-2 gap-2 text-sm">
+            <div class="flex justify-between py-1 border-b border-gray-200">
+              <span class="text-gray-600">Open:</span>
+              <span class="text-gray-900">{{ formatCurrency(stock.price.open) }}</span>
             </div>
-            <div class="detail-row">
-              <span>High:</span>
-              <span>{{ formatCurrency(stock.range.high) }}</span>
+            <div class="flex justify-between py-1 border-b border-gray-200">
+              <span class="text-gray-600">High:</span>
+              <span class="text-gray-900">{{ formatCurrency(stock.range.high) }}</span>
             </div>
-            <div class="detail-row">
-              <span>Low:</span>
-              <span>{{ formatCurrency(stock.range.low) }}</span>
+            <div class="flex justify-between py-1 border-b border-gray-200">
+              <span class="text-gray-600">Low:</span>
+              <span class="text-gray-900">{{ formatCurrency(stock.range.low) }}</span>
             </div>
-            <div class="detail-row">
-              <span>Volume:</span>
-              <span>{{ formatNumber(stock.volume) }}</span>
+            <div class="flex justify-between py-1 border-b border-gray-200">
+              <span class="text-gray-600">Volume:</span>
+              <span class="text-gray-900">{{ formatNumber(stock.volume) }}</span>
             </div>
           </div>
         </ng-container>
       </div>
 
       <!-- News Widget -->
-      <div *ngIf="widget.type === 'news'" class="news-widget">
+      <div *ngIf="widget.type === 'news'" class="news-widget-content">
         <ng-container *ngIf="getNewsData() as news">
-          <div class="news-header">
-            <span class="news-query">{{ news.query | titlecase }}</span>
-            <mat-chip class="news-count">{{ news.total_results }} articles</mat-chip>
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">{{ news.query | titlecase }}</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ news.total_results }} articles</span
+            >
           </div>
 
-          <div class="news-articles">
+          <div class="space-y-3">
             <div
               *ngFor="let article of news.articles.slice(0, getMaxArticles())"
-              class="news-article"
+              class="p-3 bg-gray-50 rounded-lg border border-gray-200"
             >
-              <div class="article-header">
-                <h4 class="article-title">{{ article.title }}</h4>
-                <span class="article-source">{{ article.source }}</span>
+              <div class="flex justify-between items-start mb-2 gap-2">
+                <h4 class="font-medium text-sm leading-tight flex-1 text-gray-900">
+                  {{ article.title }}
+                </h4>
+                <span
+                  class="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded whitespace-nowrap"
+                  >{{ article.source }}</span
+                >
               </div>
-              <p class="article-description">{{ article.description }}</p>
-              <div class="article-meta">
-                <span class="article-time">{{ formatRelativeTime(article.published_at) }}</span>
-                <a [href]="article.url" target="_blank" class="article-link">
-                  <mat-icon>open_in_new</mat-icon>
+              <p class="text-gray-700 text-sm mb-2 leading-relaxed">{{ article.description }}</p>
+              <div class="flex justify-between items-center text-xs text-gray-600">
+                <span>{{ formatRelativeTime(article.published_at) }}</span>
+                <a
+                  [href]="article.url"
+                  target="_blank"
+                  class="flex items-center gap-1 text-primary-600 hover:text-primary-700 transition-colors"
+                >
+                  <mat-icon class="text-sm">open_in_new</mat-icon>
                   Read more
                 </a>
               </div>
@@ -144,26 +160,30 @@
       </div>
 
       <!-- Clock Widget -->
-      <div *ngIf="widget.type === 'clock'" class="clock-widget">
+      <div *ngIf="widget.type === 'clock'" class="text-center clock-widget-content">
         <ng-container *ngIf="getClockData() as clock">
-          <div class="clock-time">
-            <div class="time-display">{{ clock.time.formatted_12h }}</div>
-            <div class="timezone">{{ clock.location }}</div>
+          <div class="mb-4">
+            <div class="text-4xl font-light font-mono mb-2 text-gray-900">
+              {{ clock.time.formatted_12h }}
+            </div>
+            <div class="text-gray-600 font-medium">{{ clock.location }}</div>
           </div>
 
-          <div class="clock-date" *ngIf="widget.config.size !== 'small'">
-            <div class="date-display">{{ clock.date.full }}</div>
-            <div class="day-of-week">{{ clock.date.day_of_week }}</div>
+          <div *ngIf="widget.config.size !== 'small'" class="pt-4 border-t border-gray-200">
+            <div class="text-lg font-medium mb-1 text-gray-900">{{ clock.date.full }}</div>
+            <div class="text-gray-600 text-sm">{{ clock.date.day_of_week }}</div>
           </div>
         </ng-container>
       </div>
     </div>
-  </mat-card-content>
+  </div>
 
-  <mat-card-footer *ngIf="widget.metadata" class="widget-footer">
-    <div class="widget-meta">
-      <span class="last-updated">{{ formatRelativeTime(widget.metadata.updated_at) }}</span>
-      <mat-chip *ngIf="isMockData()" class="mock-chip">Mock Data</mat-chip>
+  <div *ngIf="widget.metadata" class="widget-footer p-3 border-t border-gray-200 bg-gray-50">
+    <div class="flex justify-between items-center text-xs text-gray-600">
+      <span>{{ formatRelativeTime(widget.metadata.updated_at) }}</span>
+      <span *ngIf="isMockData()" class="px-2 py-1 bg-orange-100 text-orange-600 rounded-full"
+        >Mock Data</span
+      >
     </div>
-  </mat-card-footer>
-</mat-card>
+  </div>
+</div>
