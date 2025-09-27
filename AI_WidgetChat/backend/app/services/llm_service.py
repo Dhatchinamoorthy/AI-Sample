@@ -124,6 +124,22 @@ class LLMService:
                     },
                     "required": []
                 }
+            ),
+            FunctionDeclaration(
+                name="get_top_stocks",
+                description="Get the top 10 most actively traded stocks with current prices and market data",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "limit": {
+                            "type": "integer",
+                            "description": "Number of top stocks to return (default: 10, max: 20)",
+                            "minimum": 1,
+                            "maximum": 20
+                        }
+                    },
+                    "required": []
+                }
             )
         ]
         
@@ -233,6 +249,11 @@ class LLMService:
                 time_data = await self.external_api_service.get_time(timezone, location)
                 return self.widget_service.create_clock_widget(timezone, location, time_data)
             
+            elif function_name == "get_top_stocks":
+                limit = args.get("limit", 10)
+                stocks_data = await self.external_api_service.get_top_stocks(limit)
+                return self.widget_service.create_top_stocks_widget(stocks_data)
+            
         except Exception as e:
             print(f"Error executing function call {function_name}: {e}")
             return None
@@ -244,7 +265,8 @@ class LLMService:
             "weather", "temperature", "forecast", "rain", "sunny",
             "stock", "price", "trading", "market", "shares",
             "news", "latest", "headlines", "breaking",
-            "time", "clock", "timezone", "what time"
+            "time", "clock", "timezone", "what time",
+            "top stocks", "most traded", "active stocks", "leaderboard", "top 10"
         ]
         return any(keyword in message_lower for keyword in widget_keywords)
     
@@ -279,6 +301,12 @@ class LLMService:
                 location = self._extract_location(message)
                 time_data = await self.external_api_service.get_time(timezone, location)
                 return self.widget_service.create_clock_widget(timezone, location, time_data)
+            
+            elif any(keyword in message_lower for keyword in ["top stocks", "most traded", "active stocks", "leaderboard", "top 10"]):
+                # Extract limit from message if specified
+                limit = self._extract_top_stocks_limit(message)
+                stocks_data = await self.external_api_service.get_top_stocks(limit)
+                return self.widget_service.create_top_stocks_widget(stocks_data)
         
         except Exception as e:
             print(f"Error extracting widget from message: {e}")
@@ -335,6 +363,20 @@ class LLMService:
         
         return "technology"  # Default query
     
+    def _extract_top_stocks_limit(self, message: str) -> int:
+        """Extract limit for top stocks from message"""
+        import re
+        
+        # Look for numbers in the message
+        numbers = re.findall(r'\b(\d+)\b', message)
+        
+        if numbers:
+            limit = int(numbers[0])
+            # Ensure limit is within reasonable bounds
+            return min(max(limit, 1), 20)
+        
+        return 10  # Default limit
+    
     async def _fallback_response(self, message: str) -> Dict[str, Any]:
         """Provide a fallback response when VertexAI is not available"""
         message_lower = message.lower()
@@ -350,6 +392,21 @@ class LLMService:
                 "content": "I can help you get stock information! To enable this feature, please configure your Alpha Vantage API key in the backend configuration.",
                 "widgets": []
             }
+        elif any(word in message_lower for word in ['top stocks', 'most traded', 'active stocks', 'leaderboard', 'top 10']):
+            # Top stocks widget can work with mock data
+            try:
+                limit = self._extract_top_stocks_limit(message)
+                stocks_data = await self.external_api_service.get_top_stocks(limit)
+                widget_data = self.widget_service.create_top_stocks_widget(stocks_data)
+                return {
+                    "content": f"Here are the top {limit} most actively traded stocks with current market data.",
+                    "widgets": [widget_data]
+                }
+            except Exception as e:
+                return {
+                    "content": "I can show you the top traded stocks! However, there was an error retrieving the data.",
+                    "widgets": []
+                }
         elif any(word in message_lower for word in ['news', 'headlines', 'current events']):
             return {
                 "content": "I'd be happy to fetch the latest news for you! Please configure your News API key to enable this feature.",

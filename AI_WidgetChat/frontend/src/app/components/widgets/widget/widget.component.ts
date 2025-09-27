@@ -102,7 +102,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
       'weather': 'cloud',
       'stock': 'trending_up',
       'news': 'article',
-      'clock': 'access_time'
+      'clock': 'access_time',
+      'top_stocks': 'leaderboard'
     };
     return icons[this.widget.type] || 'widgets';
   }
@@ -121,6 +122,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   getClockData() {
     return this.widgetService.extractClockData(this.widget);
+  }
+
+  getTopStocksData() {
+    return this.widgetService.extractTopStocksData(this.widget);
   }
 
   getMaxArticles(): number {

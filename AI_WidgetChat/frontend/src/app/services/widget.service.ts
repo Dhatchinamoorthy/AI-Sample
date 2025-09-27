@@ -10,7 +10,8 @@ import {
   WeatherData,
   StockData,
   NewsData,
-  ClockData
+  ClockData,
+  TopStocksData
 } from '../models/widget.model';
 import { Widget } from '../models/chat.model';
 
@@ -126,6 +127,10 @@ export class WidgetService {
 
   extractClockData(widget: Widget): ClockData | null {
     return widget?.data as ClockData || null;
+  }
+
+  extractTopStocksData(widget: Widget): TopStocksData | null {
+    return widget?.data as TopStocksData || null;
   }
 
   // Utility methods

@@ -208,6 +208,20 @@ class ExternalAPIService:
             "mock": True
         }
     
+    async def get_top_stocks(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get top traded stocks data"""
+        if not settings.alpha_vantage_api_key:
+            return self._get_mock_top_stocks_data(limit)
+        
+        try:
+            # For now, return mock data since Alpha Vantage doesn't have a direct top stocks endpoint
+            # In a real implementation, you might use a different API or combine multiple calls
+            return self._get_mock_top_stocks_data(limit)
+            
+        except Exception as e:
+            print(f"Error fetching top stocks data: {e}")
+            return self._get_mock_top_stocks_data(limit)
+    
     def _get_mock_stock_data(self, symbol: str) -> Dict[str, Any]:
         """Return mock stock data for testing"""
         import random
@@ -229,6 +243,47 @@ class ExternalAPIService:
             "timestamp": datetime.now().isoformat(),
             "mock": True
         }
+    
+    def _get_mock_top_stocks_data(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Return mock top stocks data for testing"""
+        import random
+        
+        # Popular stock symbols
+        stock_symbols = [
+            "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "BRK.B", "UNH", "JNJ",
+            "V", "PG", "JPM", "XOM", "HD", "CVX", "MA", "PFE", "ABBV", "BAC"
+        ]
+        
+        top_stocks = []
+        
+        for i, symbol in enumerate(stock_symbols[:limit]):
+            base_price = random.uniform(50, 800)
+            change = random.uniform(-15, 15)
+            volume = random.randint(5000000, 50000000)  # Higher volume for top stocks
+            market_cap = random.uniform(100000000000, 3000000000000)  # Market cap in billions
+            
+            stock_data = {
+                "symbol": symbol,
+                "name": self._get_company_name(symbol),
+                "price": round(base_price, 2),
+                "change": round(change, 2),
+                "change_percent": f"{round((change / base_price) * 100, 2)}%",
+                "volume": volume,
+                "market_cap": round(market_cap, 0),
+                "high": round(base_price + random.uniform(0, 8), 2),
+                "low": round(base_price - random.uniform(0, 8), 2),
+                "open": round(base_price + random.uniform(-3, 3), 2),
+                "previous_close": round(base_price - change, 2),
+                "timestamp": datetime.now().isoformat(),
+                "mock": True
+            }
+            
+            top_stocks.append(stock_data)
+        
+        # Sort by volume (descending)
+        top_stocks.sort(key=lambda x: x["volume"], reverse=True)
+        
+        return top_stocks
     
     def _get_mock_news_data(self, query: str) -> Dict[str, Any]:
         """Return mock news data for testing"""

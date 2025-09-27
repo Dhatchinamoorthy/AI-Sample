@@ -6,6 +6,7 @@ from app.widgets.weather import WeatherWidget
 from app.widgets.stock import StockWidget
 from app.widgets.news import NewsWidget
 from app.widgets.clock import ClockWidget
+from app.widgets.top_stocks import TopStocksWidget
 
 
 class WidgetService:
@@ -16,7 +17,8 @@ class WidgetService:
             "weather": WeatherWidget,
             "stock": StockWidget,
             "news": NewsWidget,
-            "clock": ClockWidget
+            "clock": ClockWidget,
+            "top_stocks": TopStocksWidget
         }
     
     def create_weather_widget(self, location: str, weather_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -38,6 +40,11 @@ class WidgetService:
         """Create a clock widget with the provided data"""
         widget = ClockWidget()
         return widget.create_widget_data(timezone, location, time_data)
+    
+    def create_top_stocks_widget(self, stocks_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create a top stocks widget with the provided data"""
+        widget = TopStocksWidget()
+        return widget.create_widget_data(stocks_data)
     
     def get_widget_by_type(self, widget_type: str) -> Optional[BaseWidget]:
         """Get widget class by type"""

@@ -316,5 +316,10 @@ async def _generate_widget_data(
         time_data = await external_api_service.get_time(timezone, location)
         return widget_service.create_clock_widget(timezone, location, time_data)
     
+    elif widget_type == "top_stocks":
+        limit = params.get("limit", 10)
+        stocks_data = await external_api_service.get_top_stocks(limit)
+        return widget_service.create_top_stocks_widget(stocks_data)
+    
     else:
         raise ValueError(f"Unknown widget type: {widget_type}")

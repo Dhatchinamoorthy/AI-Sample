@@ -60,4 +60,4 @@ export interface WidgetMetadata {
   version: string;
 }
 
-export type WidgetType = 'weather' | 'stock' | 'news' | 'clock' | 'custom';
+export type WidgetType = 'weather' | 'stock' | 'news' | 'clock' | 'top_stocks' | 'custom';

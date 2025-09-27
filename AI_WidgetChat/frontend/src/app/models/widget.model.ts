@@ -3,6 +3,7 @@ export interface WidgetData {
   stock?: StockData;
   news?: NewsData;
   clock?: ClockData;
+  top_stocks?: TopStocksData;
 }
 
 export interface WeatherData {
@@ -89,6 +90,35 @@ export interface ClockData {
     year: string;
   };
   utc_offset: string;
+  timestamp: string;
+  mock?: boolean;
+}
+
+export interface TopStocksData {
+  stocks: TopStockItem[];
+  total_count: number;
+  last_updated: string;
+  market: string;
+  sort_by: string;
+}
+
+export interface TopStockItem {
+  symbol: string;
+  company_name: string;
+  price: {
+    current: number;
+    open: number;
+    previous_close: number;
+  };
+  change: {
+    amount: number;
+    percentage: number;
+    is_positive: boolean;
+    formatted: string;
+  };
+  volume: number;
+  market_cap: number;
+  rank: number;
   timestamp: string;
   mock?: boolean;
 }
