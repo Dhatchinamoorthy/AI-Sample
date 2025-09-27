@@ -170,6 +170,8 @@ class LLMService:
                 )
             )
             
+            print("LLM Service response: ", response)
+            
             # Process the response
             result = {
                 "content": "",
