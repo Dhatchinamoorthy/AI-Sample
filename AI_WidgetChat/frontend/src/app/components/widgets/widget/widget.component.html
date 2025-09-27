@@ -6,13 +6,58 @@
         <span>{{ widget.title }}</span>
       </div>
       <div class="flex gap-1">
+        <!-- Refresh Button -->
         <button
-          *ngFor="let action of widget.actions"
-          (click)="onAction(action)"
-          [matTooltip]="action.description || action.label"
+          (click)="onAction({ type: 'refresh' })"
+          matTooltip="Refresh data"
           class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-200"
         >
-          <mat-icon class="text-sm">{{ action.icon || 'more_vert' }}</mat-icon>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Configure Button -->
+        <button
+          (click)="onAction({ type: 'configure' })"
+          matTooltip="Configure widget"
+          class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-200"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Fullscreen Button -->
+        <button
+          (click)="onAction({ type: 'fullscreen' })"
+          matTooltip="View fullscreen"
+          class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-200"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+            ></path>
+          </svg>
         </button>
       </div>
     </div>
@@ -34,7 +79,7 @@
     <!-- Widget Content -->
     <div *ngIf="!isLoading && !error" class="widget-body">
       <!-- Weather Widget -->
-      <div *ngIf="widget.type === 'weather'" class="weather-widget-content">
+      <div *ngIf="widget.type === 'weather'">
         <ng-container *ngIf="getWeatherData() as weather">
           <div class="flex items-center gap-4 mb-4">
             <div class="weather-icon">
@@ -61,15 +106,57 @@
             class="flex justify-around pt-4 border-t border-gray-200"
           >
             <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
-              <mat-icon class="text-lg text-gray-500">opacity</mat-icon>
+              <svg
+                class="w-5 h-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                ></path>
+              </svg>
               <span>{{ weather.details.humidity }}%</span>
             </div>
             <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
-              <mat-icon class="text-lg text-gray-500">speed</mat-icon>
+              <svg
+                class="w-5 h-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                ></path>
+              </svg>
               <span>{{ weather.details.wind_speed }} m/s</span>
             </div>
             <div class="flex flex-col items-center gap-1 text-sm text-gray-600">
-              <mat-icon class="text-lg text-gray-500">visibility</mat-icon>
+              <svg
+                class="w-5 h-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                ></path>
+              </svg>
               <span>{{ weather.details.visibility }} km</span>
             </div>
           </div>
@@ -77,7 +164,7 @@
       </div>
 
       <!-- Stock Widget -->
-      <div *ngIf="widget.type === 'stock'" class="stock-widget-content">
+      <div *ngIf="widget.type === 'stock'">
         <ng-container *ngIf="getStockData() as stock">
           <div class="mb-3">
             <div class="text-2xl font-semibold text-primary-600">{{ stock.symbol }}</div>
@@ -119,7 +206,7 @@
       </div>
 
       <!-- News Widget -->
-      <div *ngIf="widget.type === 'news'" class="news-widget-content">
+      <div *ngIf="widget.type === 'news'">
         <ng-container *ngIf="getNewsData() as news">
           <div class="flex justify-between items-center mb-4">
             <span class="font-semibold text-primary-600">{{ news.query | titlecase }}</span>
@@ -160,7 +247,7 @@
       </div>
 
       <!-- Clock Widget -->
-      <div *ngIf="widget.type === 'clock'" class="text-center clock-widget-content">
+      <div *ngIf="widget.type === 'clock'" class="text-center">
         <ng-container *ngIf="getClockData() as clock">
           <div class="mb-4">
             <div class="text-4xl font-light font-mono mb-2 text-gray-900">

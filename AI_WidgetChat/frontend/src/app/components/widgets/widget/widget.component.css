@@ -1,6 +1,9 @@
 .widget-card {
   @apply rounded-xl transition-all duration-300;
-  color: white !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #1f2937 !important;
 }
 
 .widget-card * {
@@ -236,3 +239,27 @@
 /* All widget content is now styled with Tailwind classes in the template */
 
 /* Responsive Design - handled by Tailwind responsive classes */
+
+/* Fix tooltip scroll behavior */
+.widget-card button {
+  position: relative;
+  z-index: 1;
+}
+
+.widget-card button:hover {
+  transform: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Prevent tooltip from causing scroll issues */
+.mat-tooltip {
+  position: fixed !important;
+  z-index: 1000 !important;
+}
+
+/* Ensure buttons don't cause layout shifts */
+.widget-card .flex.gap-1 button {
+  flex-shrink: 0;
+  min-width: 2rem;
+  min-height: 2rem;
+}

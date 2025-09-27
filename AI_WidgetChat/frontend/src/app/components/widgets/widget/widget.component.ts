@@ -99,10 +99,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   getWidgetIcon(): string {
     const icons: { [key: string]: string } = {
-      'weather': 'wb_sunny',
+      'weather': 'cloud',
       'stock': 'trending_up',
-      'news': 'newspaper',
-      'clock': 'schedule'
+      'news': 'article',
+      'clock': 'access_time'
     };
     return icons[this.widget.type] || 'widgets';
   }

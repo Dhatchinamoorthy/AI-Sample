@@ -36,8 +36,8 @@ class ClockWidget(BaseWidget):
                 "config": self.default_config,
                 "actions": self.get_supported_actions(),
                 "metadata": {
-                    "created_at": datetime.now().isoformat(),
-                    "updated_at": datetime.now().isoformat(),
+                    "created_at": datetime.now().astimezone().isoformat(),
+                    "updated_at": datetime.now().astimezone().isoformat(),
                     "source": "system" if not time_data.get("mock") else "mock",
                     "version": "1.0.0"
                 }
@@ -96,7 +96,7 @@ class ClockWidget(BaseWidget):
                     "year": self._extract_year(date)
                 },
                 "utc_offset": raw_data.get("utc_offset", "+0000"),
-                "timestamp": raw_data.get("timestamp", datetime.now().isoformat()),
+                "timestamp": raw_data.get("timestamp", datetime.now().astimezone().isoformat()),
                 "mock": raw_data.get("mock", False)
             }
         except Exception as e:
@@ -231,13 +231,13 @@ class ClockWidget(BaseWidget):
                     "year": "Unknown"
                 },
                 "utc_offset": "+0000",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().astimezone().isoformat()
             },
             "config": self.default_config,
             "actions": [self.create_action("refresh")],
             "metadata": {
-                "created_at": datetime.now().isoformat(),
-                "updated_at": datetime.now().isoformat(),
+                "created_at": datetime.now().astimezone().isoformat(),
+                "updated_at": datetime.now().astimezone().isoformat(),
                 "source": "error",
                 "version": "1.0.0"
             }

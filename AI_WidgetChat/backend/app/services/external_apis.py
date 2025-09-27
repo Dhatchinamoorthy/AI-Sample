@@ -142,23 +142,31 @@ class ExternalAPIService:
     async def get_time(self, timezone_str: str = "UTC", location: Optional[str] = None) -> Dict[str, Any]:
         """Get current time for a specific timezone"""
         try:
+            # Get current local server time first
+            local_now = datetime.now()
+            
             # Get timezone object
             if timezone_str == "UTC":
                 tz = timezone.utc
             else:
                 tz = pytz.timezone(timezone_str)
             
-            # Get current time in the timezone
-            now = datetime.now(tz)
+            # Convert local time to the requested timezone
+            # First get the local timezone
+            local_tz = datetime.now().astimezone().tzinfo
+            
+            # Convert local time to target timezone
+            local_aware = local_now.replace(tzinfo=local_tz)
+            target_time = local_aware.astimezone(tz)
             
             return {
                 "timezone": timezone_str,
                 "location": location or timezone_str,
-                "current_time": now.strftime("%Y-%m-%d %H:%M:%S"),
-                "time_12h": now.strftime("%I:%M:%S %p"),
-                "date": now.strftime("%A, %B %d, %Y"),
-                "utc_offset": now.strftime("%z"),
-                "timestamp": now.isoformat()
+                "current_time": target_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "time_12h": target_time.strftime("%I:%M:%S %p"),
+                "date": target_time.strftime("%A, %B %d, %Y"),
+                "utc_offset": target_time.strftime("%z"),
+                "timestamp": target_time.isoformat()
             }
         
         except Exception as e:
@@ -261,15 +269,25 @@ class ExternalAPIService:
     
     def _get_mock_time_data(self, timezone_str: str, location: Optional[str]) -> Dict[str, Any]:
         """Return mock time data for testing"""
-        now = datetime.now(timezone.utc)
+        # Use local server time for mock data
+        local_now = datetime.now()
+        local_tz = datetime.now().astimezone().tzinfo
+        local_aware = local_now.replace(tzinfo=local_tz)
+        
+        # Convert to target timezone if not UTC
+        if timezone_str == "UTC":
+            target_time = local_aware.astimezone(timezone.utc)
+        else:
+            tz = pytz.timezone(timezone_str)
+            target_time = local_aware.astimezone(tz)
         
         return {
             "timezone": timezone_str,
             "location": location or timezone_str,
-            "current_time": now.strftime("%Y-%m-%d %H:%M:%S"),
-            "time_12h": now.strftime("%I:%M:%S %p"),
-            "date": now.strftime("%A, %B %d, %Y"),
-            "utc_offset": "+0000",
-            "timestamp": now.isoformat(),
+            "current_time": target_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "time_12h": target_time.strftime("%I:%M:%S %p"),
+            "date": target_time.strftime("%A, %B %d, %Y"),
+            "utc_offset": target_time.strftime("%z"),
+            "timestamp": target_time.isoformat(),
             "mock": True
         }
