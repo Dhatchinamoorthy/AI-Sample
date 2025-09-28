@@ -7,6 +7,12 @@ from app.widgets.stock import StockWidget
 from app.widgets.news import NewsWidget
 from app.widgets.clock import ClockWidget
 from app.widgets.top_stocks import TopStocksWidget
+# Banking widgets
+from app.widgets.banking.accounts import AccountsWidget
+from app.widgets.banking.transactions import TransactionsWidget
+from app.widgets.banking.offers import OffersWidget
+from app.widgets.banking.payments import PaymentsWidget
+from app.widgets.banking.banker import BankerWidget
 
 
 class WidgetService:
@@ -18,7 +24,13 @@ class WidgetService:
             "stock": StockWidget,
             "news": NewsWidget,
             "clock": ClockWidget,
-            "top_stocks": TopStocksWidget
+            "top_stocks": TopStocksWidget,
+            # Banking widgets
+            "banking_accounts": AccountsWidget,
+            "banking_transactions": TransactionsWidget,
+            "banking_offers": OffersWidget,
+            "banking_payments": PaymentsWidget,
+            "banking_banker": BankerWidget
         }
     
     def create_weather_widget(self, location: str, weather_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -45,6 +57,32 @@ class WidgetService:
         """Create a top stocks widget with the provided data"""
         widget = TopStocksWidget()
         return widget.create_widget_data(stocks_data)
+    
+    # Banking widget creation methods
+    def create_banking_accounts_widget(self, accounts_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a banking accounts widget with the provided data"""
+        widget = AccountsWidget()
+        return widget.create_widget_data(accounts_data)
+    
+    def create_banking_transactions_widget(self, account_id: str, transactions_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a banking transactions widget with the provided data"""
+        widget = TransactionsWidget()
+        return widget.create_widget_data(account_id, transactions_data)
+    
+    def create_banking_offers_widget(self, offers_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a banking offers widget with the provided data"""
+        widget = OffersWidget()
+        return widget.create_widget_data(offers_data)
+    
+    def create_banking_payments_widget(self, payment_type: str, payment_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a banking payments widget with the provided data"""
+        widget = PaymentsWidget()
+        return widget.create_widget_data(payment_type, payment_data)
+    
+    def create_banking_banker_widget(self, banker_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a banking banker widget with the provided data"""
+        widget = BankerWidget()
+        return widget.create_widget_data(banker_data)
     
     def get_widget_by_type(self, widget_type: str) -> Optional[BaseWidget]:
         """Get widget class by type"""
@@ -126,11 +164,17 @@ class WidgetService:
             "weather": 300,    # 5 minutes
             "stock": 60,       # 1 minute
             "news": 600,       # 10 minutes
-            "clock": 30        # 30 seconds
+            "clock": 30,       # 30 seconds
+            # Banking widgets
+            "banking_accounts": 300,      # 5 minutes
+            "banking_transactions": 60,   # 1 minute
+            "banking_offers": 3600,       # 1 hour
+            "banking_payments": 300,      # 5 minutes
+            "banking_banker": 1800        # 30 minutes
         }
         return refresh_intervals.get(widget_type, 300)
     
     def should_auto_refresh(self, widget_type: str) -> bool:
         """Determine if a widget should auto-refresh"""
-        auto_refresh_widgets = ["weather", "stock", "clock"]
+        auto_refresh_widgets = ["weather", "stock", "clock", "banking_accounts", "banking_transactions"]
         return widget_type in auto_refresh_widgets

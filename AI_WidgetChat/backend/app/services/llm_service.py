@@ -9,6 +9,7 @@ from vertexai.generative_models import GenerativeModel, FunctionDeclaration, Too
 import httpx
 from app.config import settings
 from app.services.external_apis import ExternalAPIService
+from app.services.banking_api import BankingAPIService
 from app.services.widget_service import WidgetService
 
 
@@ -17,6 +18,7 @@ class LLMService:
     
     def __init__(self):
         self.external_api_service = ExternalAPIService()
+        self.banking_api_service = BankingAPIService()
         self.widget_service = WidgetService()
         self._initialize_vertex_ai()
         self._setup_functions()
@@ -140,6 +142,111 @@ class LLMService:
                     },
                     "required": []
                 }
+            ),
+            # Banking functions
+            FunctionDeclaration(
+                name="get_banking_accounts",
+                description="Get all bank accounts or filter by account type (checking, savings, credit, investment, business)",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "account_type": {
+                            "type": "string",
+                            "description": "Filter accounts by type (checking, savings, credit, investment, business)",
+                            "enum": ["checking", "savings", "credit", "investment", "business"]
+                        }
+                    },
+                    "required": []
+                }
+            ),
+            FunctionDeclaration(
+                name="get_account_transactions",
+                description="Get transactions for a specific bank account",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "account_id": {
+                            "type": "string",
+                            "description": "The account ID to get transactions for"
+                        },
+                        "limit": {
+                            "type": "integer",
+                            "description": "Number of transactions to return (default: 10, max: 50)",
+                            "minimum": 1,
+                            "maximum": 50
+                        },
+                        "transaction_type": {
+                            "type": "string",
+                            "description": "Filter transactions by type",
+                            "enum": ["debit", "credit", "transfer", "payment", "deposit", "withdrawal"]
+                        }
+                    },
+                    "required": ["account_id"]
+                }
+            ),
+            FunctionDeclaration(
+                name="get_banking_offers",
+                description="Get available banking offers and promotions",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "category": {
+                            "type": "string",
+                            "description": "Filter offers by category",
+                            "enum": ["savings", "credit", "investment", "loans", "mortgage"]
+                        },
+                        "limit": {
+                            "type": "integer",
+                            "description": "Number of offers to return (default: 10, max: 20)",
+                            "minimum": 1,
+                            "maximum": 20
+                        }
+                    },
+                    "required": []
+                }
+            ),
+            FunctionDeclaration(
+                name="get_payment_links",
+                description="Get payment links and methods based on payment type",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "payment_type": {
+                            "type": "string",
+                            "description": "Type of payment to get links for",
+                            "enum": ["self", "3rd_party", "bill_pay", "international"]
+                        },
+                        "amount": {
+                            "type": "number",
+                            "description": "Payment amount (optional)"
+                        },
+                        "recipient": {
+                            "type": "string",
+                            "description": "Payment recipient (optional)"
+                        }
+                    },
+                    "required": ["payment_type"]
+                }
+            ),
+            FunctionDeclaration(
+                name="get_banker_contacts",
+                description="Get banker contact information and availability",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "department": {
+                            "type": "string",
+                            "description": "Filter bankers by department",
+                            "enum": ["personal_banking", "business_banking", "investment_services", "mortgage_services", "commercial_banking"]
+                        },
+                        "specialization": {
+                            "type": "string",
+                            "description": "Filter bankers by specialization",
+                            "enum": ["wealth_management", "small_business", "retirement_planning", "first_time_buyers", "large_corporations"]
+                        }
+                    },
+                    "required": []
+                }
             )
         ]
         
@@ -254,6 +361,38 @@ class LLMService:
                 stocks_data = await self.external_api_service.get_top_stocks(limit)
                 return self.widget_service.create_top_stocks_widget(stocks_data)
             
+            # Banking function calls
+            elif function_name == "get_banking_accounts":
+                account_type = args.get("account_type")
+                accounts_data = await self.banking_api_service.get_accounts_by_type(account_type)
+                return self.widget_service.create_banking_accounts_widget(accounts_data)
+            
+            elif function_name == "get_account_transactions":
+                account_id = args.get("account_id")
+                limit = args.get("limit", 10)
+                transaction_type = args.get("transaction_type")
+                transactions_data = await self.banking_api_service.get_account_transactions(account_id, limit, transaction_type)
+                return self.widget_service.create_banking_transactions_widget(account_id, transactions_data)
+            
+            elif function_name == "get_banking_offers":
+                category = args.get("category")
+                limit = args.get("limit", 10)
+                offers_data = await self.banking_api_service.get_offers(category, limit)
+                return self.widget_service.create_banking_offers_widget(offers_data)
+            
+            elif function_name == "get_payment_links":
+                payment_type = args.get("payment_type")
+                amount = args.get("amount")
+                recipient = args.get("recipient")
+                payment_data = await self.banking_api_service.get_payment_links(payment_type, amount, recipient)
+                return self.widget_service.create_banking_payments_widget(payment_type, payment_data)
+            
+            elif function_name == "get_banker_contacts":
+                department = args.get("department")
+                specialization = args.get("specialization")
+                banker_data = await self.banking_api_service.get_banker_contacts(department, specialization)
+                return self.widget_service.create_banking_banker_widget(banker_data)
+            
         except Exception as e:
             print(f"Error executing function call {function_name}: {e}")
             return None
@@ -266,7 +405,12 @@ class LLMService:
             "stock", "price", "trading", "market", "shares",
             "news", "latest", "headlines", "breaking",
             "time", "clock", "timezone", "what time",
-            "top stocks", "most traded", "active stocks", "leaderboard", "top 10"
+            "top stocks", "most traded", "active stocks", "leaderboard", "top 10",
+            # Banking keywords
+            "account", "accounts", "banking", "bank", "balance", "checking", "savings", "credit",
+            "transaction", "transactions", "payment", "payments", "transfer", "deposit", "withdrawal",
+            "offer", "offers", "promotion", "promotions", "bonus", "cashback",
+            "banker", "bankers", "contact", "advisor", "specialist", "manager"
         ]
         return any(keyword in message_lower for keyword in widget_keywords)
     
@@ -307,6 +451,36 @@ class LLMService:
                 limit = self._extract_top_stocks_limit(message)
                 stocks_data = await self.external_api_service.get_top_stocks(limit)
                 return self.widget_service.create_top_stocks_widget(stocks_data)
+            
+            # Banking widget extraction
+            elif any(keyword in message_lower for keyword in ["account", "accounts", "banking", "balance"]):
+                # Extract account type if specified
+                account_type = self._extract_account_type(message)
+                accounts_data = await self.banking_api_service.get_accounts_by_type(account_type)
+                return self.widget_service.create_banking_accounts_widget(accounts_data)
+            
+            elif any(keyword in message_lower for keyword in ["transaction", "transactions", "payment", "payments"]):
+                # Extract account ID and transaction type if specified
+                account_id = self._extract_account_id(message)
+                transaction_type = self._extract_transaction_type(message)
+                limit = self._extract_transaction_limit(message)
+                if account_id:
+                    transactions_data = await self.banking_api_service.get_account_transactions(account_id, limit, transaction_type)
+                    return self.widget_service.create_banking_transactions_widget(account_id, transactions_data)
+            
+            elif any(keyword in message_lower for keyword in ["offer", "offers", "promotion", "bonus", "cashback"]):
+                # Extract offer category if specified
+                category = self._extract_offer_category(message)
+                limit = self._extract_offer_limit(message)
+                offers_data = await self.banking_api_service.get_offers(category, limit)
+                return self.widget_service.create_banking_offers_widget(offers_data)
+            
+            elif any(keyword in message_lower for keyword in ["banker", "bankers", "contact", "advisor", "specialist"]):
+                # Extract department and specialization if specified
+                department = self._extract_banker_department(message)
+                specialization = self._extract_banker_specialization(message)
+                banker_data = await self.banking_api_service.get_banker_contacts(department, specialization)
+                return self.widget_service.create_banking_banker_widget(banker_data)
         
         except Exception as e:
             print(f"Error extracting widget from message: {e}")
@@ -453,3 +627,129 @@ class LLMService:
                 return timezone
         
         return "UTC"  # Default timezone
+    
+    def _extract_account_type(self, message: str) -> Optional[str]:
+        """Extract account type from message"""
+        message_lower = message.lower()
+        account_types = {
+            "checking": ["checking", "checking account"],
+            "savings": ["savings", "savings account"],
+            "credit": ["credit", "credit card", "credit account"],
+            "investment": ["investment", "investment account", "portfolio"],
+            "business": ["business", "business account"]
+        }
+        
+        for account_type, keywords in account_types.items():
+            if any(keyword in message_lower for keyword in keywords):
+                return account_type
+        
+        return None
+    
+    def _extract_account_id(self, message: str) -> Optional[str]:
+        """Extract account ID from message"""
+        import re
+        
+        # Look for account ID patterns (ACC followed by numbers)
+        account_patterns = [
+            r'ACC\d+',
+            r'account\s+(\w+)',
+            r'account\s+id\s+(\w+)'
+        ]
+        
+        for pattern in account_patterns:
+            match = re.search(pattern, message, re.IGNORECASE)
+            if match:
+                return match.group(1) if match.groups() else match.group(0)
+        
+        return "ACC001"  # Default account ID for demo
+    
+    def _extract_transaction_type(self, message: str) -> Optional[str]:
+        """Extract transaction type from message"""
+        message_lower = message.lower()
+        transaction_types = {
+            "debit": ["debit", "debit transaction"],
+            "credit": ["credit", "credit transaction"],
+            "transfer": ["transfer", "money transfer"],
+            "payment": ["payment", "bill payment"],
+            "deposit": ["deposit", "money deposit"],
+            "withdrawal": ["withdrawal", "cash withdrawal"]
+        }
+        
+        for tx_type, keywords in transaction_types.items():
+            if any(keyword in message_lower for keyword in keywords):
+                return tx_type
+        
+        return None
+    
+    def _extract_transaction_limit(self, message: str) -> int:
+        """Extract transaction limit from message"""
+        import re
+        
+        numbers = re.findall(r'\b(\d+)\b', message)
+        if numbers:
+            limit = int(numbers[0])
+            return min(max(limit, 1), 50)
+        
+        return 10  # Default limit
+    
+    def _extract_offer_category(self, message: str) -> Optional[str]:
+        """Extract offer category from message"""
+        message_lower = message.lower()
+        categories = {
+            "savings": ["savings", "savings offer"],
+            "credit": ["credit", "credit card", "credit offer"],
+            "investment": ["investment", "investment offer", "portfolio"],
+            "loans": ["loan", "loans", "loan offer"],
+            "mortgage": ["mortgage", "mortgage offer", "home loan"]
+        }
+        
+        for category, keywords in categories.items():
+            if any(keyword in message_lower for keyword in keywords):
+                return category
+        
+        return None
+    
+    def _extract_offer_limit(self, message: str) -> int:
+        """Extract offer limit from message"""
+        import re
+        
+        numbers = re.findall(r'\b(\d+)\b', message)
+        if numbers:
+            limit = int(numbers[0])
+            return min(max(limit, 1), 20)
+        
+        return 10  # Default limit
+    
+    def _extract_banker_department(self, message: str) -> Optional[str]:
+        """Extract banker department from message"""
+        message_lower = message.lower()
+        departments = {
+            "personal_banking": ["personal", "personal banking", "personal banker"],
+            "business_banking": ["business", "business banking", "business banker"],
+            "investment_services": ["investment", "investment services", "investment advisor"],
+            "mortgage_services": ["mortgage", "mortgage services", "mortgage specialist"],
+            "commercial_banking": ["commercial", "commercial banking", "commercial banker"]
+        }
+        
+        for department, keywords in departments.items():
+            if any(keyword in message_lower for keyword in keywords):
+                return department
+        
+        return None
+    
+    def _extract_banker_specialization(self, message: str) -> Optional[str]:
+        """Extract banker specialization from message"""
+        message_lower = message.lower()
+        specializations = {
+            "wealth_management": ["wealth", "wealth management", "wealth advisor"],
+            "small_business": ["small business", "small business banking"],
+            "retirement_planning": ["retirement", "retirement planning", "retirement advisor"],
+            "first_time_buyers": ["first time", "first time buyer", "first time home buyer"],
+            "large_corporations": ["corporate", "large corporation", "enterprise"]
+        }
+        
+        for specialization, keywords in specializations.items():
+            if any(keyword in message_lower for keyword in keywords):
+                return specialization
+        
+        return None

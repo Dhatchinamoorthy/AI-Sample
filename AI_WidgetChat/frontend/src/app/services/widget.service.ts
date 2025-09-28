@@ -11,7 +11,12 @@ import {
   StockData,
   NewsData,
   ClockData,
-  TopStocksData
+  TopStocksData,
+  BankingAccountsData,
+  BankingTransactionsData,
+  BankingOffersData,
+  BankingPaymentsData,
+  BankingBankerData
 } from '../models/widget.model';
 import { Widget } from '../models/chat.model';
 
@@ -131,6 +136,27 @@ export class WidgetService {
 
   extractTopStocksData(widget: Widget): TopStocksData | null {
     return widget?.data as TopStocksData || null;
+  }
+
+  // Banking widget data extraction methods
+  extractBankingAccountsData(widget: Widget): BankingAccountsData | null {
+    return widget?.data as BankingAccountsData || null;
+  }
+
+  extractBankingTransactionsData(widget: Widget): BankingTransactionsData | null {
+    return widget?.data as BankingTransactionsData || null;
+  }
+
+  extractBankingOffersData(widget: Widget): BankingOffersData | null {
+    return widget?.data as BankingOffersData || null;
+  }
+
+  extractBankingPaymentsData(widget: Widget): BankingPaymentsData | null {
+    return widget?.data as BankingPaymentsData || null;
+  }
+
+  extractBankingBankerData(widget: Widget): BankingBankerData | null {
+    return widget?.data as BankingBankerData || null;
   }
 
   // Utility methods

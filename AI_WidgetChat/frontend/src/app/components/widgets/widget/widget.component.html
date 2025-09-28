@@ -44,6 +44,46 @@
               stroke-width="2"
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             ></path>
+            <!-- Banking Accounts Icon -->
+            <path
+              *ngSwitchCase="'banking_accounts'"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+            ></path>
+            <!-- Banking Transactions Icon -->
+            <path
+              *ngSwitchCase="'banking_transactions'"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+            ></path>
+            <!-- Banking Offers Icon -->
+            <path
+              *ngSwitchCase="'banking_offers'"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+            ></path>
+            <!-- Banking Payments Icon -->
+            <path
+              *ngSwitchCase="'banking_payments'"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+            ></path>
+            <!-- Banking Banker Icon -->
+            <path
+              *ngSwitchCase="'banking_banker'"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
             <!-- Default Widget Icon -->
             <path
               *ngSwitchDefault
@@ -364,6 +404,248 @@
               <div class="flex justify-between">
                 <span>Updated:</span>
                 <span class="font-medium">{{ formatRelativeTime(topStocks.last_updated) }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Banking Accounts Widget -->
+      <div *ngIf="widget.type === 'banking_accounts'">
+        <ng-container *ngIf="getBankingAccountsData() as accounts">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">My Accounts</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ accounts.summary.total_accounts }} accounts</span
+            >
+          </div>
+
+          <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="text-sm text-blue-800 font-medium">Total Balance</div>
+            <div class="text-2xl font-bold text-blue-900">
+              {{ accounts.summary.total_balance_formatted }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div
+              *ngFor="let account of accounts.accounts"
+              class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                  <mat-icon class="text-primary-600">{{ getWidgetIcon() }}</mat-icon>
+                </div>
+                <div>
+                  <div class="font-medium text-sm text-gray-900">{{ account.name }}</div>
+                  <div class="text-xs text-gray-600">
+                    {{ account.account_number }} • {{ account.type | titlecase }}
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div
+                  class="font-semibold text-sm"
+                  [class.text-green-600]="account.is_positive"
+                  [class.text-red-600]="!account.is_positive"
+                >
+                  {{ account.balance_formatted }}
+                </div>
+                <div class="text-xs text-gray-600">{{ account.status | titlecase }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Banking Transactions Widget -->
+      <div *ngIf="widget.type === 'banking_transactions'">
+        <ng-container *ngIf="getBankingTransactionsData() as transactions">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">Recent Transactions</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ transactions.summary.total_transactions }} transactions</span
+            >
+          </div>
+
+          <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+            <div class="text-sm text-gray-600">Account Balance</div>
+            <div class="text-xl font-bold text-gray-900">
+              {{ transactions.summary.account_balance_formatted }}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div
+              *ngFor="let transaction of transactions.transactions"
+              class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full flex items-center justify-center"
+                  [class.bg-red-100]="transaction.is_debit"
+                  [class.bg-green-100]="!transaction.is_debit"
+                >
+                  <mat-icon
+                    class="text-sm"
+                    [class.text-red-600]="transaction.is_debit"
+                    [class.text-green-600]="!transaction.is_debit"
+                  >
+                    {{ transaction.is_debit ? 'arrow_downward' : 'arrow_upward' }}
+                  </mat-icon>
+                </div>
+                <div>
+                  <div class="font-medium text-sm text-gray-900">{{ transaction.description }}</div>
+                  <div class="text-xs text-gray-600">{{ transaction.date_formatted }}</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div
+                  class="font-semibold text-sm"
+                  [class.text-red-600]="transaction.is_debit"
+                  [class.text-green-600]="!transaction.is_debit"
+                >
+                  {{ transaction.is_debit ? '-' : '+' }}{{ transaction.amount_formatted }}
+                </div>
+                <div class="text-xs text-gray-600">{{ transaction.status | titlecase }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Banking Offers Widget -->
+      <div *ngIf="widget.type === 'banking_offers'">
+        <ng-container *ngIf="getBankingOffersData() as offers">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">Available Offers</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ offers.summary.total_offers }} offers</span
+            >
+          </div>
+
+          <div class="space-y-3">
+            <div
+              *ngFor="let offer of offers.offers"
+              class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-semibold text-sm text-gray-900">{{ offer.title }}</h4>
+                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">{{
+                  offer.category | titlecase
+                }}</span>
+              </div>
+              <p class="text-gray-700 text-sm mb-3">{{ offer.description }}</p>
+              <div class="flex justify-between items-center">
+                <div class="text-lg font-bold text-blue-600">{{ offer.value }}</div>
+                <div class="text-xs text-gray-600">
+                  <span
+                    [class.text-red-600]="offer.is_expired"
+                    [class.text-green-600]="!offer.is_expired"
+                  >
+                    {{ offer.is_expired ? 'Expired' : offer.days_remaining + ' days left' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Banking Payments Widget -->
+      <div *ngIf="widget.type === 'banking_payments'">
+        <ng-container *ngIf="getBankingPaymentsData() as payments">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">Payment Options</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ payments.summary.total_methods }} methods</span
+            >
+          </div>
+
+          <div class="space-y-3">
+            <div
+              *ngFor="let method of payments.payment_methods"
+              class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h4 class="font-semibold text-sm text-gray-900">{{ method.name }}</h4>
+                <span
+                  *ngIf="method.recommended"
+                  class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                  >Recommended</span
+                >
+              </div>
+              <p class="text-gray-700 text-sm mb-3">{{ method.description }}</p>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center gap-4">
+                  <span
+                    [class.text-green-600]="method.is_free"
+                    [class.text-gray-600]="!method.is_free"
+                  >
+                    {{ method.is_free ? 'Free' : method.fee_formatted }}
+                  </span>
+                  <span class="text-gray-600">{{ method.processing_time }}</span>
+                </div>
+                <button
+                  class="px-3 py-1 bg-primary-600 text-white text-xs rounded hover:bg-primary-700 transition-colors"
+                >
+                  Select
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Banking Banker Widget -->
+      <div *ngIf="widget.type === 'banking_banker'">
+        <ng-container *ngIf="getBankingBankerData() as bankers">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-primary-600">Banker Contacts</span>
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xs text-gray-600"
+              >{{ bankers.summary.total_bankers }} bankers</span
+            >
+          </div>
+
+          <div class="space-y-3">
+            <div
+              *ngFor="let banker of bankers.bankers"
+              class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex items-start gap-3">
+                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                  <mat-icon class="text-primary-600">person</mat-icon>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-sm text-gray-900">{{ banker.name }}</h4>
+                    <span
+                      *ngIf="banker.is_available"
+                      class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                      >Available</span
+                    >
+                  </div>
+                  <div class="text-sm text-gray-600 mb-2">{{ banker.title }}</div>
+                  <div class="text-xs text-gray-500 mb-2">
+                    {{ banker.specialization | titlecase }} • {{ banker.experience }}
+                  </div>
+                  <div class="flex items-center gap-4 text-xs text-gray-600">
+                    <span>{{ banker.availability }}</span>
+                    <span>{{ banker.languages.join(', ') }}</span>
+                  </div>
+                  <div class="flex gap-2 mt-3">
+                    <button
+                      class="px-3 py-1 bg-primary-600 text-white text-xs rounded hover:bg-primary-700 transition-colors"
+                    >
+                      Contact
+                    </button>
+                    <button
+                      class="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors"
+                    >
+                      Schedule
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

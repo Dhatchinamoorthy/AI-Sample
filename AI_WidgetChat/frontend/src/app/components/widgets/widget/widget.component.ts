@@ -103,7 +103,13 @@ export class WidgetComponent implements OnInit, OnDestroy {
       'stock': 'trending_up',
       'news': 'article',
       'clock': 'access_time',
-      'top_stocks': 'leaderboard'
+      'top_stocks': 'leaderboard',
+      // Banking widgets
+      'banking_accounts': 'account_balance',
+      'banking_transactions': 'receipt_long',
+      'banking_offers': 'local_offer',
+      'banking_payments': 'payment',
+      'banking_banker': 'person'
     };
     return icons[this.widget.type] || 'widgets';
   }
@@ -126,6 +132,27 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   getTopStocksData() {
     return this.widgetService.extractTopStocksData(this.widget);
+  }
+
+  // Banking widget data methods
+  getBankingAccountsData() {
+    return this.widgetService.extractBankingAccountsData(this.widget);
+  }
+
+  getBankingTransactionsData() {
+    return this.widgetService.extractBankingTransactionsData(this.widget);
+  }
+
+  getBankingOffersData() {
+    return this.widgetService.extractBankingOffersData(this.widget);
+  }
+
+  getBankingPaymentsData() {
+    return this.widgetService.extractBankingPaymentsData(this.widget);
+  }
+
+  getBankingBankerData() {
+    return this.widgetService.extractBankingBankerData(this.widget);
   }
 
   getMaxArticles(): number {
@@ -154,7 +181,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   isMockData(): boolean {
     const data = this.getWidgetData();
-    return !!(data && data.mock === true);
+    return !!(data && (data as any).mock === true);
   }
 
   private getWidgetData() {
@@ -167,6 +194,19 @@ export class WidgetComponent implements OnInit, OnDestroy {
         return this.getNewsData();
       case 'clock':
         return this.getClockData();
+      case 'top_stocks':
+        return this.getTopStocksData();
+      // Banking widgets
+      case 'banking_accounts':
+        return this.getBankingAccountsData();
+      case 'banking_transactions':
+        return this.getBankingTransactionsData();
+      case 'banking_offers':
+        return this.getBankingOffersData();
+      case 'banking_payments':
+        return this.getBankingPaymentsData();
+      case 'banking_banker':
+        return this.getBankingBankerData();
       default:
         return null;
     }
